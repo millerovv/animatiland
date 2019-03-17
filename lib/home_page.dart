@@ -1,3 +1,4 @@
+import 'package:animatiland/animated_appbar.dart';
 import 'package:flutter/material.dart';
 
 const Map<String, IconData> gridContent = {
@@ -20,9 +21,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  Animation<double> appBarHeight;
-  Animation<double> appBarTitlePosY;
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   AnimationController appBarAnimationController;
 
   int nextRoutIndex = -1;
@@ -31,38 +30,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     appBarAnimationController = AnimationController(duration: Duration(milliseconds: 500), vsync: this)
+    ..addListener(() {
+      // Without this setState Scaffold body wouldn't let appBar to push it's boundaries
+      setState(() {});
+    })
     ..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Navigator.pushNamed(context, routes[nextRoutIndex]).then((value) {
           appBarAnimationController.reset();
         });
       }
-    });
-
-    appBarHeight = Tween<double>(begin: 80, end: widget.screenHeight).animate(
-      CurvedAnimation(
-        parent: appBarAnimationController,
-        curve: Interval(
-          0.0,
-          1,
-          curve: Curves.ease,
-        ),
-      ),
-    )..addListener(() {
-      setState(() {});
-    });
-
-    appBarTitlePosY = Tween<double>(begin: 80 / 2, end: -30).animate(
-      CurvedAnimation(
-        parent: appBarAnimationController,
-        curve: Interval(
-          0.6,
-          1,
-          curve: Curves.ease,
-        ),
-      ),
-    )..addListener(() {
-      setState(() {});
     });
   }
 
@@ -75,24 +52,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(appBarHeight.value),
-        child: Container(
-          height: appBarHeight.value,
-          color: Theme.of(context).primaryColor,
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                top: appBarTitlePosY.value,
-                left: MediaQuery.of(context).size.width / 2.8,
-                child: Text('Animatiland',
-                    style: Theme.of(context).textTheme.title.copyWith(color: Colors.white),
-                    textAlign: TextAlign.center),
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: AnimatedAppbar(
+          title: 'Animatiland',
+          controller: appBarAnimationController,
+          screenHeight: MediaQuery.of(context).size.height),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(
