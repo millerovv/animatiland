@@ -10,7 +10,7 @@ const Map<String, IconData> gridContent = {
   'Example 6': Icons.add,
 };
 
-const List<String> routes = ['/example1'];
+const List<String> routes = ['/example1', '/example2'];
 
 class HomePage extends StatefulWidget {
   final double screenHeight;

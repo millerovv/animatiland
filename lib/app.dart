@@ -1,5 +1,6 @@
 import 'package:animatiland/first_example_page.dart';
 import 'package:animatiland/home_page.dart';
+import 'package:animatiland/second_example_page.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(screenHeight: MediaQuery.of(context).size.height),
         '/example1': (context) => FirstExamplePage(),
+        '/example2': (context) => SecondExamplePage(),
       },
     );
   }
