@@ -1,4 +1,4 @@
-import 'package:animatiland/animated_appbar.dart';
+import 'package:animatiland/home/animated_appbar.dart';
 import 'package:flutter/material.dart';
 
 const Map<String, IconData> gridContent = {

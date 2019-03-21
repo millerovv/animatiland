@@ -1,4 +1,4 @@
-import 'package:animatiland/second_example_animated_container.dart';
+import 'package:animatiland/gesture_based/second_example_animated_container.dart';
 import 'package:flutter/material.dart';
 
 class SecondExamplePage extends StatefulWidget {
@@ -28,37 +28,37 @@ class _SecondExamplePageState extends State<SecondExamplePage> with SingleTicker
 	Widget build(BuildContext context) {
 		screenHeight = MediaQuery.of(context).size.height;
 		screenWidth = MediaQuery.of(context).size.width;
-		return GestureDetector(
-			onVerticalDragStart: (details) {
-				controller.forward();
-			},
-			onVerticalDragEnd: (details) {
-				controller.reverse();
-			},
-			onVerticalDragUpdate: (details) {
-				setState(() {
-					if (containerHeight + details.delta.dy <= screenHeight && containerHeight + details.delta.dy >= 0) {
-						containerHeight += details.delta.dy;
-					}
-				});
-			},
-			onDoubleTap: () {
-				setState(() {
-					containerHeight = 200;
-				});
-				controller.reset();
-			},
-		  child: Scaffold(
-		  	backgroundColor: Theme.of(context).primaryColor,
-		  	appBar: AppBar(),
-		  	body: Center(
-		  	  child: SecondExampleAnimatedContainer(
+		return Scaffold(
+			backgroundColor: Theme.of(context).primaryColor,
+			appBar: AppBar(),
+			body: GestureDetector(
+				  onVerticalDragStart: (details) {
+					  controller.forward();
+				  },
+				  onVerticalDragEnd: (details) {
+					  controller.reverse();
+				  },
+				  onVerticalDragUpdate: (details) {
+					  setState(() {
+						  if (containerHeight + details.delta.dy <= screenHeight && containerHeight + details.delta.dy >= 0) {
+							  containerHeight += details.delta.dy;
+						  }
+					  });
+				  },
+				  onDoubleTap: () {
+					  setState(() {
+						  containerHeight = 200;
+					  });
+					  controller.reset();
+				  },
+			  child: Center(
+			    child: SecondExampleAnimatedContainer(
 				    containerHeight: containerHeight,
 				    screenWidth: screenWidth,
 				    controller: controller,
 			    ),
-		  	)
-		  ),
+			  ),
+			)
 		);
 	}
 }

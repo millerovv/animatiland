@@ -1,6 +1,6 @@
-import 'package:animatiland/first_example_page.dart';
-import 'package:animatiland/home_page.dart';
-import 'package:animatiland/second_example_page.dart';
+import 'package:animatiland/staggered/first_example_page.dart';
+import 'package:animatiland/home/home_page.dart';
+import 'package:animatiland/gesture_based/second_example_page.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {

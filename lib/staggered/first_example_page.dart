@@ -1,4 +1,4 @@
-import 'package:animatiland/animated_rect.dart';
+import 'package:animatiland/staggered/animated_rect.dart';
 import 'package:flutter/material.dart';
 
 class FirstExamplePage extends StatefulWidget {
