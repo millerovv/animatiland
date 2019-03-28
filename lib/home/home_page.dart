@@ -2,15 +2,15 @@ import 'package:animatiland/home/animated_appbar.dart';
 import 'package:flutter/material.dart';
 
 const Map<String, IconData> gridContent = {
-  'Example 1': Icons.language,
-  'Example 2': Icons.face,
-  'Example 3': Icons.radio,
+  'Example 1': Icons.directions,
+  'Example 2': Icons.gesture,
+  'Example 3': Icons.star,
   'Example 4': Icons.airplanemode_active,
   'Example 5': Icons.android,
   'Example 6': Icons.add,
 };
 
-const List<String> routes = ['/example1', '/example2'];
+const List<String> routes = ['/example1', '/example2', '/example3'];
 
 class HomePage extends StatefulWidget {
   final double screenHeight;
