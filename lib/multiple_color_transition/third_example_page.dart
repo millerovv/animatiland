@@ -12,15 +12,15 @@ class _ThirdExamplePageState extends State<ThirdExamplePage> with SingleTickerPr
 	@override
 	void initState() {
 		super.initState();
-		controller = AnimationController(duration: Duration(milliseconds: 5000), vsync: this)
-			..addStatusListener((status) {
-				if (status == AnimationStatus.completed) {
-					controller.reverse();
-				} else if (status == AnimationStatus.dismissed) {
-					controller.forward();
-				}
-			});
-		controller.forward();
+		controller = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
+//			..addStatusListener((status) {
+//				if (status == AnimationStatus.completed) {
+//					controller.reverse();
+//				} else if (status == AnimationStatus.dismissed) {
+//					controller.forward();
+//				}
+//			});
+//		controller.forward();
 	}
 
 	@override
@@ -34,10 +34,14 @@ class _ThirdExamplePageState extends State<ThirdExamplePage> with SingleTickerPr
     return Scaffold(
 	    backgroundColor: Theme.of(context).primaryColor,
 	    appBar: AppBar(),
-	    body: Container(
+	    body: GestureDetector(
+				onTap: (){debugPrint('onTap'); controller.forward();},
+	      onDoubleTap: () => controller.reset(),
+	      child: Container(
 		    child: Center(
-			    child: AnimatedRating(controller: controller, targetColor: kRatingColors['green'], targetRating: 7.2),
+			    child: AnimatedRating(controller: controller, targetRating: 5.7),
 		    ),
+	      ),
 	    ),
     );
   }
