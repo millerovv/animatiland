@@ -2,9 +2,9 @@ import 'package:animatiland/home/animated_appbar.dart';
 import 'package:flutter/material.dart';
 
 const Map<String, IconData> gridContent = {
-  'Example 1': Icons.directions,
-  'Example 2': Icons.gesture,
-  'Example 3': Icons.star,
+  'Staggered': Icons.directions,
+  'Gestures': Icons.gesture,
+  'Rating': Icons.star,
   'Example 4': Icons.airplanemode_active,
   'Example 5': Icons.android,
   'Example 6': Icons.add,

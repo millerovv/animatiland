@@ -12,15 +12,7 @@ class _ThirdExamplePageState extends State<ThirdExamplePage> with SingleTickerPr
 	@override
 	void initState() {
 		super.initState();
-		controller = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
-//			..addStatusListener((status) {
-//				if (status == AnimationStatus.completed) {
-//					controller.reverse();
-//				} else if (status == AnimationStatus.dismissed) {
-//					controller.forward();
-//				}
-//			});
-//		controller.forward();
+		controller = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
 	}
 
 	@override
@@ -31,18 +23,18 @@ class _ThirdExamplePageState extends State<ThirdExamplePage> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+	    onTap: () => controller.forward(),
+	    onDoubleTap: () => controller.reset(),
+      child: Scaffold(
 	    backgroundColor: Theme.of(context).primaryColor,
 	    appBar: AppBar(),
-	    body: GestureDetector(
-				onTap: (){debugPrint('onTap'); controller.forward();},
-	      onDoubleTap: () => controller.reset(),
-	      child: Container(
+	    body: Container(
 		    child: Center(
-			    child: AnimatedRating(controller: controller, targetRating: 5.7),
+			    child: AnimatedRating(controller: controller, targetRating: 7.3),
 		    ),
-	      ),
 	    ),
+      ),
     );
   }
 }

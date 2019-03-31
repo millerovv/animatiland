@@ -20,10 +20,12 @@ class AnimatedRating extends StatefulWidget {
 }
 
 class _AnimatedRatingState extends State<AnimatedRating> {
+  static const double starsWidth = 152.0;
   int numberOfColorStages;
   int currentColorStage;
   double singleColorStageControllerValueInterval;
-  int numberOfStarHalfs;
+  int numberOfStarHalves;
+  Animation<double> starsPercent;
   Animation colorRed;
   Animation<Color> colorRedToOrange;
   Animation<Color> colorOrangeToYellow;
@@ -37,16 +39,13 @@ class _AnimatedRatingState extends State<AnimatedRating> {
     currentColorStage = 0;
     numberOfColorStages = _calculateNumberOfColorTransitionStages(widget.targetRating);
     singleColorStageControllerValueInterval = (numberOfColorStages > 0) ? 1.0 / numberOfColorStages : 1.0;
-    numberOfStarHalfs = _calculateNumberOfStarTransitionStages(widget.targetRating);
-    _initColorAnimations();
-    debugPrint("numberOfStages = $numberOfColorStages");
-    debugPrint("singleStageControllerValueInterval = $singleColorStageControllerValueInterval");
+    numberOfStarHalves = _calculateNumberOfStarTransitionStages(widget.targetRating);
+    _initAnimations();
     widget.controller.addListener(() {
       int newStage = _calculateAnimationStage(widget.controller.value);
       if (newStage != currentColorStage) {
         setState(() {
           currentColorStage = newStage;
-          debugPrint("on ${widget.controller.value} setState currentStage = $currentColorStage");
         });
       }
     });
@@ -60,47 +59,32 @@ class _AnimatedRatingState extends State<AnimatedRating> {
   }
 
   Widget _buildAnimation(BuildContext context, Widget child) {
-    return Container(
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            5,
-                (index) =>
-                Padding(
-                  // index = 0 1 2 3 4
-                  padding: EdgeInsets.symmetric(horizontal: 2.0),
-                  child: AnimatedOpacity(
-//                      opacity: (index <= currentColorStage) ? 1.0 : 0.0,
-                      opacity: 1.0,
-                      duration: Duration(milliseconds: widget.controller.duration.inMilliseconds ~/ 2),
-                      child: _getStarIcon(index),
-                  ),
-                ),
-          )),
-    );
-  }
-
-  Widget _getStarIcon(int index) {
-    return (index <= numberOfColorStages) ? Icon(
-      Icons.star,
-      color: animationStages[currentColorStage].value,
-      size: 48.0,
-    ) : Icon(
-      Icons.star_half,
-      color: animationStages[currentColorStage].value,
-      size: 48.0,
+    return CustomPaint(
+      painter: StarsPainter(
+          targetPercent: 100,
+          currentPercent: starsPercent.value,
+          color: animationStages[currentColorStage].value),
+      child: SizedBox(width: starsWidth),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-//    return AnimatedBuilder(
-//      builder: _buildAnimation,
-//      animation: widget.controller,
-//    );
-  return Container(
-    child: _getStars(),
-  );
+    return Stack(
+      children: <Widget>[
+        CustomPaint(
+          painter: StarsPainter(
+              targetPercent: 100,
+              currentPercent: 100,
+              color: Color(0xFFEBEBEB)),
+          child: SizedBox(width: starsWidth),
+        ),
+        AnimatedBuilder(
+          builder: _buildAnimation,
+          animation: widget.controller,
+        ),
+      ],
+    );
   }
 
   int _calculateNumberOfColorTransitionStages(double rating) {
@@ -137,11 +121,15 @@ class _AnimatedRatingState extends State<AnimatedRating> {
     }
   }
 
-  void _initColorAnimations() {
+  void _initAnimations() {
+    starsPercent = Tween(
+      begin: 0.0,
+      end: widget.targetRating * 10,
+    ).animate(CurvedAnimation(parent: widget.controller, curve: Curves.linear));
+
     animationStages.add(colorRed = ConstantTween(kRatingColors['red']).animate(widget.controller));
 
-    void initRedToOrange() =>
-        animationStages.add(colorRedToOrange = ColorTween(
+    void initRedToOrange() => animationStages.add(colorRedToOrange = ColorTween(
           begin: kRatingColors['red'],
           end: kRatingColors['orange'],
         ).animate(
@@ -155,8 +143,7 @@ class _AnimatedRatingState extends State<AnimatedRating> {
           ),
         ));
 
-    void initOrangeToYellow() =>
-        animationStages.add(colorOrangeToYellow = ColorTween(
+    void initOrangeToYellow() => animationStages.add(colorOrangeToYellow = ColorTween(
           begin: kRatingColors['orange'],
           end: kRatingColors['yellow'],
         ).animate(
@@ -170,8 +157,7 @@ class _AnimatedRatingState extends State<AnimatedRating> {
           ),
         ));
 
-    void initYellowToLightGreen() =>
-        animationStages.add(colorYellowToLightGreen = ColorTween(
+    void initYellowToLightGreen() => animationStages.add(colorYellowToLightGreen = ColorTween(
           begin: kRatingColors['yellow'],
           end: kRatingColors['light_green'],
         ).animate(
@@ -185,8 +171,7 @@ class _AnimatedRatingState extends State<AnimatedRating> {
           ),
         ));
 
-    void initLightGreenToGreen() =>
-        animationStages.add(colorLightGreenToGreen = ColorTween(
+    void initLightGreenToGreen() => animationStages.add(colorLightGreenToGreen = ColorTween(
           begin: kRatingColors['light_green'],
           end: kRatingColors['green'],
         ).animate(
@@ -222,11 +207,4 @@ class _AnimatedRatingState extends State<AnimatedRating> {
         initLightGreenToGreen();
     }
   }
-}
-
-Widget _getStars() {
-  return CustomPaint(
-    painter: StarsPainter(targetPercent: 100, currentPercent: 100),
-    child: Container(),
-  );
 }
