@@ -9,6 +9,7 @@ const Map<String, Color> kRatingColors = {
   'red': Color(0xFFD13206),
 };
 
+//TODO: Add tap screen to play animation tip
 class AnimatedRating extends StatefulWidget {
   final AnimationController controller;
   final double targetRating;
@@ -20,12 +21,12 @@ class AnimatedRating extends StatefulWidget {
 }
 
 class _AnimatedRatingState extends State<AnimatedRating> {
-  static const double starsWidth = 152.0;
-  int numberOfColorStages;
-  int currentColorStage;
+  static const double starsWidth = 92.0;
+  int _numberOfColorStages;
+  int _currentColorStage;
   double singleColorStageControllerValueInterval;
-  int numberOfStarHalves;
   Animation<double> starsPercent;
+  Animation<double> starsOpacity;
   Animation colorRed;
   Animation<Color> colorRedToOrange;
   Animation<Color> colorOrangeToYellow;
@@ -33,57 +34,60 @@ class _AnimatedRatingState extends State<AnimatedRating> {
   Animation<Color> colorLightGreenToGreen;
   List<Animation> animationStages = [];
 
+  int get currentColorStage {
+    _currentColorStage = _calculateAnimationStage(widget.controller.value);
+    return _currentColorStage;
+  }
+
+  int get numberOfColorStages {
+    _numberOfColorStages = _calculateNumberOfColorTransitionStages(widget.targetRating);
+    return _numberOfColorStages;
+  }
+
+
   @override
   void initState() {
     super.initState();
-    currentColorStage = 0;
-    numberOfColorStages = _calculateNumberOfColorTransitionStages(widget.targetRating);
+    _currentColorStage = 0;
     singleColorStageControllerValueInterval = (numberOfColorStages > 0) ? 1.0 / numberOfColorStages : 1.0;
-    numberOfStarHalves = _calculateNumberOfStarTransitionStages(widget.targetRating);
     _initAnimations();
-    widget.controller.addListener(() {
-      int newStage = _calculateAnimationStage(widget.controller.value);
-      if (newStage != currentColorStage) {
-        setState(() {
-          currentColorStage = newStage;
-        });
-      }
-    });
+  }
 
-    widget.controller.addStatusListener((status) {
-      if (status == AnimationStatus.dismissed) {
-        currentColorStage = 0;
-      }
-      debugPrint(status.toString());
-    });
+  @override
+  void dispose() {
+    widget.controller?.dispose();
+    super.dispose();
   }
 
   Widget _buildAnimation(BuildContext context, Widget child) {
-    return CustomPaint(
-      painter: StarsPainter(
-          targetPercent: 100,
-          currentPercent: starsPercent.value,
-          color: animationStages[currentColorStage].value),
-      child: SizedBox(width: starsWidth),
+    return Opacity(
+      opacity: starsOpacity.value,
+      child: Stack(
+        children: <Widget>[
+          CustomPaint(
+            painter: StarsPainter(
+                targetPercent: 100,
+                currentPercent: 100,
+                color: Color(0xFFEBEBEB)),
+            child: SizedBox(width: starsWidth),
+          ),
+          CustomPaint(
+            painter: StarsPainter(
+                targetPercent: 100,
+                currentPercent: starsPercent.value,
+                color: animationStages[currentColorStage].value),
+            child: SizedBox(width: starsWidth),
+          )
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        CustomPaint(
-          painter: StarsPainter(
-              targetPercent: 100,
-              currentPercent: 100,
-              color: Color(0xFFEBEBEB)),
-          child: SizedBox(width: starsWidth),
-        ),
-        AnimatedBuilder(
-          builder: _buildAnimation,
-          animation: widget.controller,
-        ),
-      ],
+    return AnimatedBuilder(
+      builder: _buildAnimation,
+      animation: widget.controller,
     );
   }
 
@@ -101,23 +105,19 @@ class _AnimatedRatingState extends State<AnimatedRating> {
     }
   }
 
-  int _calculateNumberOfStarTransitionStages(double rating) {
-    return rating.floor() + 1;
-  }
-
   int _calculateAnimationStage(double controllerValue) {
-    if (numberOfColorStages == 0 && controllerValue < singleColorStageControllerValueInterval) {
+    if (numberOfColorStages == 0 && controllerValue <= singleColorStageControllerValueInterval) {
       return 0;
-    } else if (numberOfColorStages > 0 && controllerValue < singleColorStageControllerValueInterval) {
+    } else if (numberOfColorStages > 0 && controllerValue <= singleColorStageControllerValueInterval) {
       return 1;
-    } else if (numberOfColorStages > 1 && controllerValue < singleColorStageControllerValueInterval * 2) {
+    } else if (numberOfColorStages > 1 && controllerValue <= singleColorStageControllerValueInterval * 2) {
       return 2;
-    } else if (numberOfColorStages > 2 && controllerValue < singleColorStageControllerValueInterval * 3) {
+    } else if (numberOfColorStages > 2 && controllerValue <= singleColorStageControllerValueInterval * 3) {
       return 3;
-    } else if (numberOfColorStages > 3 && controllerValue < singleColorStageControllerValueInterval * 4) {
+    } else if (numberOfColorStages > 3 && controllerValue <= singleColorStageControllerValueInterval * 4) {
       return 4;
     } else {
-      return currentColorStage;
+      return _currentColorStage;
     }
   }
 
@@ -125,65 +125,84 @@ class _AnimatedRatingState extends State<AnimatedRating> {
     starsPercent = Tween(
       begin: 0.0,
       end: widget.targetRating * 10,
-    ).animate(CurvedAnimation(parent: widget.controller, curve: Curves.linear));
+    ).animate(CurvedAnimation(
+      parent: widget.controller,
+      curve: Interval(
+        0.65,
+        1.0,
+        curve: Curves.linear,
+      ),
+    ));
+
+    starsOpacity = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: widget.controller,
+      curve: Interval(
+        0.0,
+        0.55,
+        curve: Curves.easeIn,
+      ),
+    ));
 
     animationStages.add(colorRed = ConstantTween(kRatingColors['red']).animate(widget.controller));
 
     void initRedToOrange() => animationStages.add(colorRedToOrange = ColorTween(
-          begin: kRatingColors['red'],
-          end: kRatingColors['orange'],
-        ).animate(
-          CurvedAnimation(
-            parent: widget.controller,
-            curve: Interval(
-              0.0,
-              singleColorStageControllerValueInterval,
-              curve: Curves.easeInCubic,
-            ),
-          ),
-        ));
+      begin: kRatingColors['red'],
+      end: kRatingColors['orange'],
+    ).animate(
+      CurvedAnimation(
+        parent: widget.controller,
+        curve: Interval(
+          0.0,
+          singleColorStageControllerValueInterval,
+          curve: Curves.easeInCubic,
+        ),
+      ),
+    ));
 
     void initOrangeToYellow() => animationStages.add(colorOrangeToYellow = ColorTween(
-          begin: kRatingColors['orange'],
-          end: kRatingColors['yellow'],
-        ).animate(
-          CurvedAnimation(
-            parent: widget.controller,
-            curve: Interval(
-              singleColorStageControllerValueInterval,
-              singleColorStageControllerValueInterval * 2,
-              curve: Curves.easeInCubic,
-            ),
-          ),
-        ));
+      begin: kRatingColors['orange'],
+      end: kRatingColors['yellow'],
+    ).animate(
+      CurvedAnimation(
+        parent: widget.controller,
+        curve: Interval(
+          singleColorStageControllerValueInterval,
+          singleColorStageControllerValueInterval * 2,
+          curve: Curves.easeInCubic,
+        ),
+      ),
+    ));
 
     void initYellowToLightGreen() => animationStages.add(colorYellowToLightGreen = ColorTween(
-          begin: kRatingColors['yellow'],
-          end: kRatingColors['light_green'],
-        ).animate(
-          CurvedAnimation(
-            parent: widget.controller,
-            curve: Interval(
-              singleColorStageControllerValueInterval * 2,
-              singleColorStageControllerValueInterval * 3,
-              curve: Curves.easeInCubic,
-            ),
-          ),
-        ));
+      begin: kRatingColors['yellow'],
+      end: kRatingColors['light_green'],
+    ).animate(
+      CurvedAnimation(
+        parent: widget.controller,
+        curve: Interval(
+          singleColorStageControllerValueInterval * 2,
+          singleColorStageControllerValueInterval * 3,
+          curve: Curves.easeInCubic,
+        ),
+      ),
+    ));
 
     void initLightGreenToGreen() => animationStages.add(colorLightGreenToGreen = ColorTween(
-          begin: kRatingColors['light_green'],
-          end: kRatingColors['green'],
-        ).animate(
-          CurvedAnimation(
-            parent: widget.controller,
-            curve: Interval(
-              singleColorStageControllerValueInterval * 3,
-              singleColorStageControllerValueInterval * 4,
-              curve: Curves.easeInCubic,
-            ),
-          ),
-        ));
+      begin: kRatingColors['light_green'],
+      end: kRatingColors['green'],
+    ).animate(
+      CurvedAnimation(
+        parent: widget.controller,
+        curve: Interval(
+          singleColorStageControllerValueInterval * 3,
+          singleColorStageControllerValueInterval * 4,
+          curve: Curves.easeInCubic,
+        ),
+      ),
+    ));
 
     switch (numberOfColorStages) {
       case 0:
