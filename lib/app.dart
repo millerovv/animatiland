@@ -1,7 +1,4 @@
-import 'package:animatiland/multiple_color_transition/third_example_page.dart';
-import 'package:animatiland/staggered/first_example_page.dart';
-import 'package:animatiland/home/home_page.dart';
-import 'package:animatiland/gesture_based/second_example_page.dart';
+import 'package:animatiland/routing/app_router.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -14,13 +11,8 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.black,
         accentColor: Colors.pink,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => HomePage(screenHeight: MediaQuery.of(context).size.height),
-        '/example1': (context) => FirstExamplePage(),
-        '/example2': (context) => SecondExamplePage(),
-        '/example3': (context) => ThirdExamplePage()
-      },
+      initialRoute: AppRoutePaths.homePage,
+      onGenerateRoute: AppRouter.generateRoute,
     );
   }
 }
