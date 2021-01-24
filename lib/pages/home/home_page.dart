@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Future<void> _onAppBarAnimationComplete() async {
-    await Navigator.pushNamed(context, _selectedMenuItem.getItemRoute());
+    await Navigator.pushNamed(context, _selectedMenuItem.route);
     _appBarAnimationController.reset();
   }
 
@@ -60,9 +60,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Icon(item.getItemIcon()),
+                  Icon(item.icon),
                   const SizedBox(height: 8.0),
-                  Text(item.getItemName()),
+                  Text(item.name),
                 ],
               ),
               onPressed: () => _onMenuGridItemTap(item),
