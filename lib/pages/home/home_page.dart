@@ -10,8 +10,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static const Duration appBarAnimationDuration = Duration(milliseconds: 500);
 
-  AnimationController _appBarAnimationController;
-  MenuGridItem _selectedMenuItem;
+  AnimationController? _appBarAnimationController;
+  MenuGridItem? _selectedMenuItem;
 
   @override
   void initState() {
@@ -33,12 +33,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Future<void> _onAppBarAnimationComplete() async {
     await Navigator.pushNamed(context, _selectedMenuItem.route);
-    _appBarAnimationController.reset();
+    _appBarAnimationController!.reset();
   }
 
   void _onMenuGridItemTap(MenuGridItem item) {
-    if (_appBarAnimationController.status != AnimationStatus.forward) {
-      _appBarAnimationController.forward();
+    if (_appBarAnimationController!.status != AnimationStatus.forward) {
+      _appBarAnimationController!.forward();
     }
 
     _selectedMenuItem = item;
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          AnimatedAppbar(title: 'Animatiland', controller: _appBarAnimationController, screenHeight: MediaQuery.of(context).size.height),
+          AnimatedAppbar(title: 'Animatiland', controller: _appBarAnimationController!, screenHeight: MediaQuery.of(context).size.height),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(

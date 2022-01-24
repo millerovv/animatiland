@@ -4,7 +4,7 @@ import 'package:shimmer/shimmer.dart';
 
 class AppShimmer extends StatelessWidget {
 	const AppShimmer({
-		Key key,
+		Key? key,
 		this.width,
 		this.height,
 		this.baseColor = defaultBaseColor,
@@ -19,8 +19,8 @@ class AppShimmer extends StatelessWidget {
 	static const defaultBaseColor = Color(0xFFE4E4E4);
 	static const defaultHighlightColor = Color(0xFFD1D1D1);
 
-	final double width;
-	final double height;
+	final double? width;
+	final double? height;
 
 	final Color baseColor;
 	final Color highlightColor;
@@ -31,8 +31,8 @@ class AppShimmer extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		Color base = baseColor ?? defaultBaseColor;
-		Color hightlight = highlightColor ?? defaultHighlightColor;
+		Color base = baseColor;
+		Color hightlight = highlightColor;
 
 		if (opacity < 1.0) {
 			final hslFirstColor = HSLColor.fromColor(base);

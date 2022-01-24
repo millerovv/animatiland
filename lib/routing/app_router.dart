@@ -1,7 +1,6 @@
 import 'package:animatiland/pages/fractal_page/fractal_page.dart';
 import 'package:animatiland/pages/gesture_based_animation_page/gesture_based_animation_page.dart';
 import 'package:animatiland/pages/home/home_page.dart';
-import 'package:animatiland/pages/loaded_list/loaded_list_page.dart';
 import 'package:animatiland/pages/staggered_animation_page/staggered_animation_page.dart';
 import 'package:animatiland/pages/stars_page/stars_page.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ class AppRoutePaths {
   static const String gestureBasedAnimationPage = 'gestureBasedAnimationPage';
   static const String starsPage = 'starsPage';
   static const String fractalPage = 'fractalPage';
-  static const String loadedListPage = 'loadedListPage';
 }
 
 class AppRouter {
@@ -42,11 +40,6 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => FractalPage(),
           settings: const RouteSettings(name: AppRoutePaths.fractalPage),
-        );
-      case AppRoutePaths.loadedListPage:
-        return MaterialPageRoute(
-          builder: (_) => LoadedListPage(),
-          settings: const RouteSettings(name: AppRoutePaths.loadedListPage),
         );
       default:
         return MaterialPageRoute(

@@ -7,7 +7,7 @@ class StaggeredAnimationPage extends StatefulWidget {
 }
 
 class _StaggeredAnimationPageState extends State<StaggeredAnimationPage> with SingleTickerProviderStateMixin {
-	AnimationController controller;
+	AnimationController? controller;
 
 	@override
   void initState() {
@@ -15,12 +15,12 @@ class _StaggeredAnimationPageState extends State<StaggeredAnimationPage> with Si
     controller = AnimationController(duration: const Duration(milliseconds: 5000), vsync: this)
 		..addStatusListener((status) {
 			if (status == AnimationStatus.completed) {
-				controller.reverse();
+				controller!.reverse();
 			} else if (status == AnimationStatus.dismissed) {
-				controller.forward();
+				controller!.forward();
 			}
 		});
-		controller.forward();
+		controller!.forward();
   }
 
   @override
@@ -36,7 +36,7 @@ class _StaggeredAnimationPageState extends State<StaggeredAnimationPage> with Si
       appBar: AppBar(),
 	    body: Container(
 		    child: Center(
-			    child: StaggeredAnimatedRect(controller: controller.view),
+			    child: StaggeredAnimatedRect(controller: controller!.view),
 		    )
 	    ),
     );

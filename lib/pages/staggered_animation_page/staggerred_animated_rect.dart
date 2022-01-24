@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StaggeredAnimatedRect extends StatelessWidget {
-	StaggeredAnimatedRect({ Key key, this.controller }) :
+	StaggeredAnimatedRect({ Key? key, required this.controller }) :
 
 				opacity = Tween<double>(
 					begin: 0.0,
@@ -103,10 +103,10 @@ class StaggeredAnimatedRect extends StatelessWidget {
 	final Animation<double> opacity;
 	final Animation<double> firstRotateAngle;
 	final Animation<double> scale;
-	final Animation<BorderRadius> borderRadius;
-	final Animation<Color> colorRedYellow;
+	final Animation<BorderRadius?> borderRadius;
+	final Animation<Color?> colorRedYellow;
 
-	Widget _buildAnimation(BuildContext context, Widget child) {
+	Widget _buildAnimation(BuildContext context, Widget? child) {
 		return Container(
 			child: Transform.scale(
 				scale: scale.value,

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class GestureBasedAnimatedContainer extends StatelessWidget {
 	GestureBasedAnimatedContainer({
-		    Key key,
-		    @required this.containerHeight,
-		    @required double screenWidth,
-		    @required this.controller}) :
+		    Key? key,
+		    required this.containerHeight,
+		    required double? screenWidth,
+		    required this.controller}) :
 
 				color = ColorTween(
 					begin: Color(0xFFD0B32D),
@@ -48,12 +48,12 @@ class GestureBasedAnimatedContainer extends StatelessWidget {
 				super(key: key);
 
 	final AnimationController controller;
-	final Animation<Color> color;
-	final Animation<BorderRadius> borderRadius;
+	final Animation<Color?> color;
+	final Animation<BorderRadius?> borderRadius;
 	final Animation<double> width;
 	final double containerHeight;
 
-	Widget _buildAnimation(BuildContext context, Widget child) {
+	Widget _buildAnimation(BuildContext context, Widget? child) {
 		return Container(
 			height: containerHeight,
 			width: width.value,

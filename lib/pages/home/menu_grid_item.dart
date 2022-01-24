@@ -1,9 +1,9 @@
 import 'package:animatiland/routing/app_router.dart';
 import 'package:flutter/material.dart';
 
-enum MenuGridItem { staggered, gestures, stars, fractal, loadedList }
+enum MenuGridItem { staggered, gestures, stars, fractal }
 
-extension MunuGridItemExt on MenuGridItem {
+extension MunuGridItemExt on MenuGridItem? {
 
   String get name {
     switch (this) {
@@ -15,14 +15,12 @@ extension MunuGridItemExt on MenuGridItem {
         return 'Rating';
       case MenuGridItem.fractal:
         return 'Fractal';
-      case MenuGridItem.loadedList:
-        return 'Loaded List';
       default:
         return '';
     }
   }
 
-  IconData get icon {
+  IconData? get icon {
     switch (this) {
       case MenuGridItem.staggered:
         return Icons.directions;
@@ -32,8 +30,6 @@ extension MunuGridItemExt on MenuGridItem {
         return Icons.star;
       case MenuGridItem.fractal:
         return Icons.arrow_downward;
-      case MenuGridItem.loadedList:
-        return Icons.list;
       default:
         return null;
     }
@@ -49,8 +45,6 @@ extension MunuGridItemExt on MenuGridItem {
         return AppRoutePaths.starsPage;
       case MenuGridItem.fractal:
         return AppRoutePaths.fractalPage;
-      case MenuGridItem.loadedList:
-        return AppRoutePaths.loadedListPage;
       default:
         return AppRoutePaths.homePage;
     }

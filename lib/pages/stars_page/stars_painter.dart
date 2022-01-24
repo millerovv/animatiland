@@ -66,16 +66,16 @@ class StarsPainter extends CustomPainter {
     eleventhPointYOffset
   ];
 
-  double logicWidth;
-  double logicHeight;
-  double fullWidth;
+  double? logicWidth;
+  late double logicHeight;
+  double? fullWidth;
   double targetPercent;
-  double targetWidth;
+  late double targetWidth;
   double currentPercent;
-  double currentMaxWidth;
-  Color color;
+  late double currentMaxWidth;
+  Color? color;
 
-  StarsPainter({@required this.targetPercent, @required this.currentPercent, this.color: Colors.white});
+  StarsPainter({required this.targetPercent, required this.currentPercent, this.color: Colors.white});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -90,16 +90,16 @@ class StarsPainter extends CustomPainter {
       logicWidth = size.width;
     }
     fullWidth = logicWidth;
-    targetWidth = fullWidth / 100.0 * targetPercent;
-    currentMaxWidth = fullWidth / 100.0 * currentPercent;
+    targetWidth = fullWidth! / 100.0 * targetPercent;
+    currentMaxWidth = fullWidth! / 100.0 * currentPercent;
 
     final paint = Paint()
       ..style = PaintingStyle.fill
       ..strokeJoin = StrokeJoin.bevel
       ..strokeWidth = 1.0
-      ..color = color;
+      ..color = color!;
 
-    double startX = logicWidth / 2 - targetWidth / 2;
+    double startX = logicWidth! / 2 - targetWidth / 2;
     double startY = logicHeight / 2;
 
     double maxXOffset = startX + currentMaxWidth;
@@ -177,7 +177,7 @@ class StarsPainter extends CustomPainter {
   }
 
   double getAxisX(double w) {
-    return (w * logicWidth) / designWidth;
+    return (w * logicWidth!) / designWidth;
   }
 
   double getAxisY(double h) {

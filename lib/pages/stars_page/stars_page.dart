@@ -7,7 +7,7 @@ class StarsPage extends StatefulWidget {
 }
 
 class _StarsPageState extends State<StarsPage> with SingleTickerProviderStateMixin {
-  AnimationController controller;
+  AnimationController? controller;
 
   @override
   void initState() {
@@ -24,8 +24,8 @@ class _StarsPageState extends State<StarsPage> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => controller.forward(),
-      onDoubleTap: () => controller.reset(),
+      onTap: () => controller!.forward(),
+      onDoubleTap: () => controller!.reset(),
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
@@ -35,7 +35,7 @@ class _StarsPageState extends State<StarsPage> with SingleTickerProviderStateMix
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(child: Center(child: AnimatedStars(controller: controller, targetRating: 7.3))),
-            Text('Tap to animate,\ndouble tap to reset', style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.white), textAlign: TextAlign.center,),
+            Text('Tap to animate,\ndouble tap to reset', style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white), textAlign: TextAlign.center,),
           ],
         ),
       ),

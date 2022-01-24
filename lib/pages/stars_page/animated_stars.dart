@@ -10,10 +10,10 @@ const Map<String, Color> kRatingColors = {
 };
 
 class AnimatedStars extends StatefulWidget {
-  final AnimationController controller;
-  final double targetRating;
+  final AnimationController? controller;
+  final double? targetRating;
 
-  AnimatedStars({Key key, this.controller, this.targetRating}) : super(key: key);
+  AnimatedStars({Key? key, this.controller, this.targetRating}) : super(key: key);
 
   @override
   _AnimatedStarsState createState() => _AnimatedStarsState();
@@ -21,28 +21,28 @@ class AnimatedStars extends StatefulWidget {
 
 class _AnimatedStarsState extends State<AnimatedStars> {
   static const double starsWidth = 152.0;
-  int numberOfColorStages;
-  int currentColorStage;
-  double singleColorStageControllerValueInterval;
-  int numberOfStarHalves;
-  Animation<double> starsPercent;
-  Animation colorRed;
-  Animation<Color> colorRedToOrange;
-  Animation<Color> colorOrangeToYellow;
-  Animation<Color> colorYellowToLightGreen;
-  Animation<Color> colorLightGreenToGreen;
+  int? numberOfColorStages;
+  int? currentColorStage;
+  late double singleColorStageControllerValueInterval;
+  int? numberOfStarHalves;
+  late Animation<double> starsPercent;
+  Animation? colorRed;
+  Animation<Color?>? colorRedToOrange;
+  Animation<Color?>? colorOrangeToYellow;
+  Animation<Color?>? colorYellowToLightGreen;
+  Animation<Color?>? colorLightGreenToGreen;
   List<Animation> animationStages = [];
 
   @override
   void initState() {
     super.initState();
     currentColorStage = 0;
-    numberOfColorStages = _calculateNumberOfColorTransitionStages(widget.targetRating);
-    singleColorStageControllerValueInterval = (numberOfColorStages > 0) ? 1.0 / numberOfColorStages : 1.0;
-    numberOfStarHalves = _calculateNumberOfStarTransitionStages(widget.targetRating);
+    numberOfColorStages = _calculateNumberOfColorTransitionStages(widget.targetRating!);
+    singleColorStageControllerValueInterval = (numberOfColorStages! > 0) ? 1.0 / numberOfColorStages! : 1.0;
+    numberOfStarHalves = _calculateNumberOfStarTransitionStages(widget.targetRating!);
     _initAnimations();
-    widget.controller.addListener(() {
-      int newStage = _calculateAnimationStage(widget.controller.value);
+    widget.controller!.addListener(() {
+      int? newStage = _calculateAnimationStage(widget.controller!.value);
       if (newStage != currentColorStage) {
         setState(() {
           currentColorStage = newStage;
@@ -50,7 +50,7 @@ class _AnimatedStarsState extends State<AnimatedStars> {
       }
     });
 
-    widget.controller.addStatusListener((status) {
+    widget.controller!.addStatusListener((status) {
       if (status == AnimationStatus.dismissed) {
         currentColorStage = 0;
       }
@@ -58,12 +58,12 @@ class _AnimatedStarsState extends State<AnimatedStars> {
     });
   }
 
-  Widget _buildAnimation(BuildContext context, Widget child) {
+  Widget _buildAnimation(BuildContext context, Widget? child) {
     return CustomPaint(
       painter: StarsPainter(
           targetPercent: 100,
           currentPercent: starsPercent.value,
-          color: animationStages[currentColorStage].value),
+          color: animationStages[currentColorStage!].value),
       child: SizedBox(width: starsWidth),
     );
   }
@@ -81,7 +81,7 @@ class _AnimatedStarsState extends State<AnimatedStars> {
         ),
         AnimatedBuilder(
           builder: _buildAnimation,
-          animation: widget.controller,
+          animation: widget.controller!,
         ),
       ],
     );
@@ -105,16 +105,16 @@ class _AnimatedStarsState extends State<AnimatedStars> {
     return rating.floor() + 1;
   }
 
-  int _calculateAnimationStage(double controllerValue) {
+  int? _calculateAnimationStage(double controllerValue) {
     if (numberOfColorStages == 0 && controllerValue < singleColorStageControllerValueInterval) {
       return 0;
-    } else if (numberOfColorStages > 0 && controllerValue < singleColorStageControllerValueInterval) {
+    } else if (numberOfColorStages! > 0 && controllerValue < singleColorStageControllerValueInterval) {
       return 1;
-    } else if (numberOfColorStages > 1 && controllerValue < singleColorStageControllerValueInterval * 2) {
+    } else if (numberOfColorStages! > 1 && controllerValue < singleColorStageControllerValueInterval * 2) {
       return 2;
-    } else if (numberOfColorStages > 2 && controllerValue < singleColorStageControllerValueInterval * 3) {
+    } else if (numberOfColorStages! > 2 && controllerValue < singleColorStageControllerValueInterval * 3) {
       return 3;
-    } else if (numberOfColorStages > 3 && controllerValue < singleColorStageControllerValueInterval * 4) {
+    } else if (numberOfColorStages! > 3 && controllerValue < singleColorStageControllerValueInterval * 4) {
       return 4;
     } else {
       return currentColorStage;
@@ -124,17 +124,17 @@ class _AnimatedStarsState extends State<AnimatedStars> {
   void _initAnimations() {
     starsPercent = Tween(
       begin: 0.0,
-      end: widget.targetRating * 10,
-    ).animate(CurvedAnimation(parent: widget.controller, curve: Curves.linear));
+      end: widget.targetRating! * 10,
+    ).animate(CurvedAnimation(parent: widget.controller!, curve: Curves.linear));
 
-    animationStages.add(colorRed = ConstantTween(kRatingColors['red']).animate(widget.controller));
+    animationStages.add(colorRed = ConstantTween(kRatingColors['red']).animate(widget.controller!));
 
     void initRedToOrange() => animationStages.add(colorRedToOrange = ColorTween(
           begin: kRatingColors['red'],
           end: kRatingColors['orange'],
         ).animate(
           CurvedAnimation(
-            parent: widget.controller,
+            parent: widget.controller!,
             curve: Interval(
               0.0,
               singleColorStageControllerValueInterval,
@@ -148,7 +148,7 @@ class _AnimatedStarsState extends State<AnimatedStars> {
           end: kRatingColors['yellow'],
         ).animate(
           CurvedAnimation(
-            parent: widget.controller,
+            parent: widget.controller!,
             curve: Interval(
               singleColorStageControllerValueInterval,
               singleColorStageControllerValueInterval * 2,
@@ -162,7 +162,7 @@ class _AnimatedStarsState extends State<AnimatedStars> {
           end: kRatingColors['light_green'],
         ).animate(
           CurvedAnimation(
-            parent: widget.controller,
+            parent: widget.controller!,
             curve: Interval(
               singleColorStageControllerValueInterval * 2,
               singleColorStageControllerValueInterval * 3,
@@ -176,7 +176,7 @@ class _AnimatedStarsState extends State<AnimatedStars> {
           end: kRatingColors['green'],
         ).animate(
           CurvedAnimation(
-            parent: widget.controller,
+            parent: widget.controller!,
             curve: Interval(
               singleColorStageControllerValueInterval * 3,
               singleColorStageControllerValueInterval * 4,

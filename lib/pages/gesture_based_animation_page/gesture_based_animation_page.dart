@@ -7,9 +7,9 @@ class GestureBasedAnimationPage extends StatefulWidget {
 }
 
 class _GestureBasedAnimationPageState extends State<GestureBasedAnimationPage> with SingleTickerProviderStateMixin {
-	AnimationController controller;
-	double screenHeight;
-	double screenWidth;
+	AnimationController? controller;
+	late double screenHeight;
+	double? screenWidth;
 	double containerHeight = 200;
 
 	@override
@@ -33,10 +33,10 @@ class _GestureBasedAnimationPageState extends State<GestureBasedAnimationPage> w
 			appBar: AppBar(),
 			body: GestureDetector(
 				  onVerticalDragStart: (details) {
-					  controller.forward();
+					  controller!.forward();
 				  },
 				  onVerticalDragEnd: (details) {
-					  controller.reverse();
+					  controller!.reverse();
 				  },
 				  onVerticalDragUpdate: (details) {
 					  setState(() {
@@ -49,13 +49,13 @@ class _GestureBasedAnimationPageState extends State<GestureBasedAnimationPage> w
 					  setState(() {
 						  containerHeight = 200;
 					  });
-					  controller.reset();
+					  controller!.reset();
 				  },
 			  child: Center(
 			    child: GestureBasedAnimatedContainer(
 				    containerHeight: containerHeight,
 				    screenWidth: screenWidth,
-				    controller: controller,
+				    controller: controller!,
 			    ),
 			  ),
 			)

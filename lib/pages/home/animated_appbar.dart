@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AnimatedAppbar extends StatelessWidget implements PreferredSizeWidget {
-  AnimatedAppbar({Key key, this.title, this.controller, this.screenHeight}) :
+  AnimatedAppbar({Key? key, this.title, required this.controller, this.screenHeight}) :
 
         appBarHeight = Tween<double>(begin: 80, end: screenHeight).animate(
           CurvedAnimation(
@@ -27,8 +27,8 @@ class AnimatedAppbar extends StatelessWidget implements PreferredSizeWidget {
 
         super(key: key);
 
-  final String title;
-  final double screenHeight;
+  final String? title;
+  final double? screenHeight;
   final AnimationController controller;
   final Animation<double> appBarHeight;
   final Animation<double> appBarTitleY;
@@ -37,7 +37,7 @@ class AnimatedAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(appBarHeight.value);
 
-  Widget _buildAnimation(BuildContext context, Widget child) {
+  Widget _buildAnimation(BuildContext context, Widget? child) {
     return PreferredSize(
       preferredSize: preferredSize,
       child: Container(
@@ -48,8 +48,8 @@ class AnimatedAppbar extends StatelessWidget implements PreferredSizeWidget {
             Positioned(
               top: appBarTitleY.value,
               left: MediaQuery.of(context).size.width / 2.8,
-              child: Text(title,
-                  style: Theme.of(context).textTheme.title.copyWith(color: Colors.white),
+              child: Text(title!,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.white),
                   textAlign: TextAlign.center),
             ),
           ],

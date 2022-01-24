@@ -7,7 +7,7 @@ class FractalPage extends StatefulWidget {
 }
 
 class _FractalPageState extends State<FractalPage> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   @override
   void initState() {
@@ -50,19 +50,19 @@ class _FractalPageState extends State<FractalPage> with SingleTickerProviderStat
 
 class AnimatedFractal extends AnimatedWidget {
   const AnimatedFractal({
-    Key key,
-    @required Animation listenable,
+    Key? key,
+    required Animation listenable,
     this.height,
     this.width,
   })  : assert(listenable != null),
         super(key: key, listenable: listenable);
 
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
-    final Animation<double> fractalProgress = CurvedAnimation(parent: listenable, curve: Curves.easeOut);
+    final Animation<double> fractalProgress = CurvedAnimation(parent: listenable as Animation<double>, curve: Curves.easeOut);
 
     return Container(
       decoration: BoxDecoration(border: Border.all(color: Colors.white, width: 1.5)),
@@ -82,14 +82,14 @@ class FractalPainter extends CustomPainter {
     this.angle = math.pi / 5,
   });
 
-  final double progress;
+  final double? progress;
   final double defaultLineLength;
   final double angle;
 
-  double maxHeight;
-  double maxWidth;
+  double? maxHeight;
+  double? maxWidth;
 
-  int iterations;
+  late int iterations;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -97,7 +97,7 @@ class FractalPainter extends CustomPainter {
       return;
     }
 
-    maxHeight = size.height * progress;
+    maxHeight = size.height * progress!;
     maxWidth = size.width;
 
     Paint paint = Paint()
@@ -110,15 +110,15 @@ class FractalPainter extends CustomPainter {
     path.moveTo(size.width / 2, 0);
 
     var firstLineLength = defaultLineLength / 2;
-    if (firstLineLength > maxHeight) {
-      firstLineLength = maxHeight;
+    if (firstLineLength > maxHeight!) {
+      firstLineLength = maxHeight!;
     }
 
     Offset start = Offset(size.width / 2, firstLineLength);
     path.lineTo(start.dx, start.dy);
 
-    iterations = ((maxHeight - defaultLineLength / 2) / (defaultLineLength * math.cos(angle) + defaultLineLength)).floor();
-    if (defaultLineLength * math.cos(angle) + defaultLineLength > maxHeight) {
+    iterations = ((maxHeight! - defaultLineLength / 2) / (defaultLineLength * math.cos(angle) + defaultLineLength)).floor();
+    if (defaultLineLength * math.cos(angle) + defaultLineLength > maxHeight!) {
       iterations = 0;
     }
 
@@ -144,9 +144,9 @@ class FractalPainter extends CustomPainter {
     // if this is last iteration, check if branch end y coordinate fits maxHeight
     // if not – shrink lineLength
     if (i == 0) {
-      var ySpaceLeft = maxHeight - start.dy;
+      var ySpaceLeft = maxHeight! - start.dy;
       if (ySpaceLeft < lineLength * math.cos(angle)) {
-        lineLength = (maxHeight - start.dy) / sin;
+        lineLength = (maxHeight! - start.dy) / sin;
         branchFirstPartHeightNotFit = true;
       }
     }
@@ -163,9 +163,9 @@ class FractalPainter extends CustomPainter {
     var nextX2 = start.dx + lineLength * cos;
     var nextY2 = start.dy + lineLength * sin;
 
-    if (nextX2 > maxWidth) {
-      nextX2 = maxWidth;
-      nextY2 = start.dy + (maxWidth - start.dx) * math.tan(math.pi / 2 - angle);
+    if (nextX2 > maxWidth!) {
+      nextX2 = maxWidth!;
+      nextY2 = start.dy + (maxWidth! - start.dx) * math.tan(math.pi / 2 - angle);
       isThisRightMax = true;
     }
 
@@ -177,13 +177,13 @@ class FractalPainter extends CustomPainter {
 
     // Draw left part of branch second part
     if (!branchFirstPartHeightNotFit && !isThisLeftMax) {
-      var branchSecondPartEndY = nextPoint1.dy + lineLength;
+      double? branchSecondPartEndY = nextPoint1.dy + lineLength;
 
       if (i == 0) {
         branchSecondPartEndY = maxHeight;
       }
 
-      nextPoint1 = Offset(nextPoint1.dx, branchSecondPartEndY);
+      nextPoint1 = Offset(nextPoint1.dx, branchSecondPartEndY!);
 
       path.lineTo(nextPoint1.dx, nextPoint1.dy);
     }
@@ -195,13 +195,13 @@ class FractalPainter extends CustomPainter {
 
     // Draw right part of branch second part
     if (!branchFirstPartHeightNotFit && !isThisRightMax) {
-      var branchSecondPartEndY = nextPoint2.dy + lineLength;
+      double? branchSecondPartEndY = nextPoint2.dy + lineLength;
 
       if (i == 0) {
         branchSecondPartEndY = maxHeight;
       }
 
-      nextPoint2 = Offset(nextPoint2.dx, branchSecondPartEndY);
+      nextPoint2 = Offset(nextPoint2.dx, branchSecondPartEndY!);
 
       path.lineTo(nextPoint2.dx, nextPoint2.dy);
     }
